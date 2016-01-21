@@ -11,7 +11,8 @@ def entropy(data):
 		else:
 			weak += 1
 	total = strong + weak
-	ent = -(strong/total)(math.log((strong/total), 2)) - (weak/total)(math.log((weak/total), 2))
+
+	ent = -(strong/total)*(math.log((strong/total), 2)) - (weak/total)*(math.log((weak/total), 2))
 
 	return ent
 
