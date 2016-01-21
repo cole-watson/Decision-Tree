@@ -2,13 +2,16 @@ import math
 
 
 class Node:
-    def __init__(self, headers, sub_data, level):
+    def __init__(self, headers, sub_data, level, class_name):
+        self.class_name = class_name
         self.level = level
         self.sub_data = sub_data
         self.zero_data = []
         self.one_data = []
         self.headers = headers
         self.header = self.get_header()
+        if self.header == '':
+            pass
         for row in sub_data:
             if row[self.header] == 0:
                 self.zero_data.append(row)
@@ -41,22 +44,21 @@ class Node:
         one = 0
 
         for row in self.zero_data:
-            if row["Class"] == 0:
+            if row[self.class_name] == 0:
                 zero += 1
-            elif row["Class"] == 1:
+            elif row[self.class_name] == 1:
                 one += 1
         if zero == 0:
             return 1
         if one == 0:
             return 0
         if self.headers == []:
-            print(self.header + " : " + str(self.headers))
             if zero > one:
                 return 0
             else:
                 return 1
 
-        return Node(self.headers[:], self.zero_data, self.level + 1)
+        return Node(self.headers[:], self.zero_data, self.level + 1, self.class_name)
 
     def compute_right(self):
 
@@ -66,22 +68,21 @@ class Node:
         one = 0
 
         for row in self.one_data:
-            if row["Class"] == 0:
+            if row[self.class_name] == 0:
                 zero += 1
-            elif row["Class"] == 1:
+            elif row[self.class_name] == 1:
                 one += 1
         if zero == 0:
             return 1
         if one == 0:
             return 0
         if self.headers == []:
-            print(self.header + " : " + str(self.headers))
             if zero > one:
                 return 0
             else:
                 return 1
 
-        return Node(self.headers[:], self.one_data, self.level + 1)
+        return Node(self.headers[:], self.one_data, self.level + 1, self.class_name)
 
     def get_header(self):
 
@@ -90,7 +91,7 @@ class Node:
 
         for header in self.headers:
             gain = self.information_gain(self.sub_data, header)
-            if gain > max_gain:
+            if gain >= max_gain:
                 max_gain = gain
                 max_header = header
         return max_header
@@ -98,11 +99,10 @@ class Node:
     def entropy(self, data):
         zero = 0
         one = 0
-
         for row in data:
-            if row["Class"] == 0:
+            if row[self.class_name] == 0:
                 zero += 1
-            elif row["Class"] == 1:
+            elif row[self.class_name] == 1:
                 one += 1
         total = zero + one
         if zero == 0 or one == 0:

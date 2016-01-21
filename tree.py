@@ -2,10 +2,10 @@ from node import Node
 
 class Tree:
 
-	def __init__(self, data, headers):
+	def __init__(self, data, headers, class_name):
 		self.data = data
 		self.headers = headers
-		self.root = Node(self.headers, self.data, 0)
+		self.root = Node(self.headers, self.data, 0, class_name)
 
 	def __str__(self):
 

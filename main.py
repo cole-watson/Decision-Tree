@@ -3,26 +3,29 @@
 from data_import import data_reader
 from tree import Tree
 
-training_data = data_reader("data_sets1/training_set.csv")
+data = data_reader("mushrooms/agaricuslepiotatrain1.csv")
+class_name = data[1]
+training_data = data[0]
+
 headers = list(training_data[0].keys())
 headers.sort()
-headers.remove("Class")
+headers.remove(class_name)
 
-test_data = data_reader("data_sets1/test_set.csv")
-
-
+test_data = data_reader("mushrooms/agaricuslepiotatest1.csv")[0]
 
 
-tree = Tree(training_data, headers)
-tree.save("data_sets1/results.model")
+
+
+tree = Tree(training_data, headers, class_name)
+tree.save("mushrooms/result.csv")
 
 total = 0
 correct = 0
 for row in test_data:
     total += 1
-    if tree.get_class(row) == row["Class"]:
+    if tree.get_class(row) == row[class_name]:
         correct += 1
-print("Percentage correct is: " + str(correct/total))
+print("Percentage correct is: " + str((correct/total)*100) + "%")
 
 
 
