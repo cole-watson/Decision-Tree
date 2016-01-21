@@ -65,7 +65,6 @@ class Node:
         :return: a new node in our tree or leaf
         """
 
-
         zero = 0
         one = 0
 
@@ -93,9 +92,26 @@ class Node:
             elif row[new_header] == 1:
                 one_data.append(row)
 
+        if self.chi_square(_data, zero_data, one_data)<6.635:
+            if zero >= one:
+                return 0
+            else:
+                return 1
+
+        return Node(_headers[:], _data, self.level + 1, self.class_name, new_header, zero_data, one_data)
+
+    def chi_square(self, data, zero_data, one_data):
+        """
+
+        :param data: whole data set to compute chi square test one
+        :param zero_data: data set where attribute being tested equals 0
+        :param one_data: data set where attribute being tested equals 1
+        :return: a value of chi-squared
+        """
+
         p = 0
         n = 0
-        for row in _data:
+        for row in data:
             if row[self.class_name] == 0:
                 n += 1
             else:
@@ -123,17 +139,11 @@ class Node:
         p_hat_one = (p/(p+n))*len(one_data)
         n_hat_one = (n/(p+n))*len(one_data)
 
-        dev_zero = (((p_zero -p_hat_zero)**2)/p_hat_zero) + (((n_zero -n_hat_zero)**2)/n_hat_zero)
-        dev_one = (((p_one -p_hat_one)**2)/p_hat_one) + (((n_one -n_hat_one)**2)/n_hat_one)
+        dev_zero = (((p_zero - p_hat_zero)**2)/p_hat_zero) + (((n_zero - n_hat_zero)**2)/n_hat_zero)
+        dev_one = (((p_one - p_hat_one)**2)/p_hat_one) + (((n_one - n_hat_one)**2)/n_hat_one)
         dev = dev_zero + dev_one
 
-        if dev<6.635:
-            if zero>=one:
-                return 0
-            else:
-                return 1
-
-        return Node(_headers[:], _data, self.level + 1, self.class_name, new_header, zero_data, one_data)
+        return dev
 
     def get_header(self, _data, _headers):
         """
@@ -156,8 +166,8 @@ class Node:
     def entropy(self, data):
         """
 
-        :param data: data to caluate entropy from
-        :return: entropy of dataset
+        :param data: data to calculate entropy from
+        :return: entropy of data set
         """
         zero = 0
         one = 0
@@ -177,9 +187,9 @@ class Node:
     def information_gain(self, data, header):
         """
 
-        :param data: dataset to calculate infromatoin gain from
+        :param data: data set to calculate information gain from
         :param header: attribute to test the gain of
-        :return: infromation gain of header given data set, i.e. Gain(data,header)
+        :return: information gain of header given data set, i.e. Gain(data,header)
         """
         e = self.entropy(data)
         _zero_data = []
@@ -196,4 +206,4 @@ class Node:
                 _one_data.append(row)
                 s_1 += 1
 
-        return (e - (s_0 / s) * self.entropy(_zero_data) - (s_1 / s) * self.entropy(_one_data))
+        return e - (s_0 / s) * self.entropy(_zero_data) - (s_1 / s) * self.entropy(_one_data)
