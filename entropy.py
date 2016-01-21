@@ -1,7 +1,8 @@
 #calculate the entropy of a give data set
-import math
+
 
 def entropy(data):
+	import math
 	strong = 0
 	weak = 0
 	for dic in data:
