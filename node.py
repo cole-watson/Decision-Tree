@@ -3,6 +3,17 @@ import math
 
 class Node:
     def __init__(self, headers, sub_data, level, class_name, header, zero_data, one_data):
+        """
+
+        :param headers: set of potential attributes that was used to compute this nodes attribute
+        :param sub_data: the data that was used to compute this nodes attribute
+        :param level: how levels down the tree are we (the root is level 0)
+        :param class_name: the name of the classification header in the dataset
+        :param header: the attribute that this node is splitting the data on
+        :param zero_data: the dataset where header has value 0
+        :param one_data: the dataset where header has value 1
+        """
+
         self.headers = headers
         self.sub_data = sub_data
         self.class_name = class_name
@@ -47,6 +58,14 @@ class Node:
         return final
 
     def compute_next(self, _data, _headers):
+        """
+
+        :param _data: data set for next node
+        :param _headers: potential atrributes to split on
+        :return: a new node in our tree or leaf
+        """
+
+
         zero = 0
         one = 0
 
@@ -59,7 +78,7 @@ class Node:
             return 1
         if one == 0:
             return 0
-        if _headers == []:
+        if not _headers:
             if zero > one:
                 return 0
             else:
@@ -114,15 +133,15 @@ class Node:
             else:
                 return 1
 
-
-
-
-
-
-
         return Node(_headers[:], _data, self.level + 1, self.class_name, new_header, zero_data, one_data)
 
-    def get_header(self,_data, _headers):
+    def get_header(self, _data, _headers):
+        """
+
+        :param _data: data used to find next attribute to split on
+        :param _headers: all attributes available to split on
+        :return: the attribute that should be split on based on the data
+        """
 
         max_gain = 0
         max_header = ''
@@ -135,6 +154,11 @@ class Node:
         return max_header
 
     def entropy(self, data):
+        """
+
+        :param data: data to caluate entropy from
+        :return: entropy of dataset
+        """
         zero = 0
         one = 0
         for row in data:
@@ -151,6 +175,12 @@ class Node:
         return ent
 
     def information_gain(self, data, header):
+        """
+
+        :param data: dataset to calculate infromatoin gain from
+        :param header: attribute to test the gain of
+        :return: infromation gain of header given data set, i.e. Gain(data,header)
+        """
         e = self.entropy(data)
         _zero_data = []
         _one_data = []
