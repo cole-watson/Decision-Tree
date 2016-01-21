@@ -2,8 +2,12 @@
 
 from data_import import data_reader
 from tree import Tree
+import sys
 
-data = data_reader("mushrooms/agaricuslepiotatrain1.csv")
+if len(sys.argv)!= 4:
+    print("Please add arguments")
+    sys.exit(0)
+data = data_reader(sys.argv[1])
 class_name = data[1]
 training_data = data[0]
 
@@ -11,13 +15,13 @@ headers = list(training_data[0].keys())
 headers.sort()
 headers.remove(class_name)
 
-test_data = data_reader("mushrooms/agaricuslepiotatest1.csv")[0]
+test_data = data_reader(sys.argv[2])[0]
 
 
 
 
 tree = Tree(training_data, headers, class_name)
-tree.save("mushrooms/result.csv")
+tree.save(sys.argv[3])
 
 total = 0
 correct = 0

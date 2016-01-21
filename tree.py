@@ -5,7 +5,8 @@ class Tree:
 	def __init__(self, data, headers, class_name):
 		self.data = data
 		self.headers = headers
-		self.root = Node(self.headers, self.data, 0, class_name)
+
+		self.root = Node(self.headers, self.data, 0, class_name, None, None, None)
 
 	def __str__(self):
 

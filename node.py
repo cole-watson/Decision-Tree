@@ -2,24 +2,31 @@ import math
 
 
 class Node:
-    def __init__(self, headers, sub_data, level, class_name):
-        self.class_name = class_name
-        self.level = level
+    def __init__(self, headers, sub_data, level, class_name, header, zero_data, one_data):
+        self.headers = headers
         self.sub_data = sub_data
+        self.class_name = class_name
+        if header != None:
+            self.header = header
+        else:
+            self.header = self.get_header(self.sub_data, self.headers)
+
+        self.level = level
+
         self.zero_data = []
         self.one_data = []
-        self.headers = headers
-        self.header = self.get_header()
-        if self.header == '':
-            pass
-        for row in sub_data:
-            if row[self.header] == 0:
-                self.zero_data.append(row)
-            elif row[self.header] == 1:
-                self.one_data.append(row)
+        if zero_data == None:
+            for row in sub_data:
+                if row[self.header] == 0:
+                    self.zero_data.append(row)
+                elif row[self.header] == 1:
+                    self.one_data.append(row)
+        else:
+            self.zero_data = zero_data
+            self.one_data = one_data
         self.headers.remove(self.header)
-        self.left = self.compute_left()
-        self.right = self.compute_right()
+        self.left = self.compute_next(self.zero_data, self.headers[:])
+        self.right = self.compute_next(self.one_data, self.headers[:])
 
     def __str__(self):
         final = '\n'
@@ -39,11 +46,11 @@ class Node:
 
         return final
 
-    def compute_left(self):
+    def compute_next(self, _data, _headers):
         zero = 0
         one = 0
 
-        for row in self.zero_data:
+        for row in _data:
             if row[self.class_name] == 0:
                 zero += 1
             elif row[self.class_name] == 1:
@@ -52,45 +59,76 @@ class Node:
             return 1
         if one == 0:
             return 0
-        if self.headers == []:
+        if _headers == []:
             if zero > one:
                 return 0
             else:
                 return 1
 
-        return Node(self.headers[:], self.zero_data, self.level + 1, self.class_name)
+        new_header = self.get_header(_data, _headers)
+        zero_data = []
+        one_data = []
+        for row in _data:
+            if row[new_header] == 0:
+                zero_data.append(row)
+            elif row[new_header] == 1:
+                one_data.append(row)
 
-    def compute_right(self):
-
-        if self.header == "XB":
-            pass
-        zero = 0
-        one = 0
-
-        for row in self.one_data:
+        p = 0
+        n = 0
+        for row in _data:
             if row[self.class_name] == 0:
-                zero += 1
+                n += 1
+            else:
+                p += 1
+
+        p_zero = 0
+        p_one = 0
+        n_zero = 0
+        n_one = 0
+
+        for row in zero_data:
+            if row[self.class_name] == 0:
+                n_zero += 1
             elif row[self.class_name] == 1:
-                one += 1
-        if zero == 0:
-            return 1
-        if one == 0:
-            return 0
-        if self.headers == []:
-            if zero > one:
+                p_zero += 1
+
+        for row in one_data:
+            if row[self.class_name] == 0:
+                n_one += 1
+            elif row[self.class_name] == 1:
+                p_one += 1
+
+        p_hat_zero = (p/(p+n))*len(zero_data)
+        n_hat_zero = (n/(p+n))*len(zero_data)
+        p_hat_one = (p/(p+n))*len(one_data)
+        n_hat_one = (n/(p+n))*len(one_data)
+
+        dev_zero = (((p_zero -p_hat_zero)**2)/p_hat_zero) + (((n_zero -n_hat_zero)**2)/n_hat_zero)
+        dev_one = (((p_one -p_hat_one)**2)/p_hat_one) + (((n_one -n_hat_one)**2)/n_hat_one)
+        dev = dev_zero + dev_one
+
+        if dev<6.635:
+            if zero>=one:
                 return 0
             else:
                 return 1
 
-        return Node(self.headers[:], self.one_data, self.level + 1, self.class_name)
 
-    def get_header(self):
+
+
+
+
+
+        return Node(_headers[:], _data, self.level + 1, self.class_name, new_header, zero_data, one_data)
+
+    def get_header(self,_data, _headers):
 
         max_gain = 0
         max_header = ''
 
-        for header in self.headers:
-            gain = self.information_gain(self.sub_data, header)
+        for header in _headers:
+            gain = self.information_gain(_data, header)
             if gain >= max_gain:
                 max_gain = gain
                 max_header = header
