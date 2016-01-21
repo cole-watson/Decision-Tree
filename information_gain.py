@@ -16,6 +16,6 @@ def information_gain(data, val):
 			one_data.append(row)
 			s_1 += 1
 
-	return (e-(s_0/s)*entropy(zero_data)-(s_1/s)*entropy(one_data))
+	return ((e-(s_0/s)*entropy(zero_data)-(s_1/s)*entropy(one_data)),zero_data, one_data)
 
 
