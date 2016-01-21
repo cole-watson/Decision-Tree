@@ -1,6 +1,6 @@
 
 
-def information_gain(data, val):
+def information_gain(data, val, entropy):
 	from entropy import entropy
 	e = entropy(data)
 	zero_data = []
