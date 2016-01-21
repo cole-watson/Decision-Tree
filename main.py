@@ -3,16 +3,27 @@
 from data_import import data_reader
 from tree import Tree
 
-data = data_reader("data_sets1/training_set.csv")
-headers = list(data[0].keys())
+training_data = data_reader("data_sets1/training_set.csv")
+headers = list(training_data[0].keys())
+headers.sort()
 headers.remove("Class")
 
+test_data = data_reader("data_sets1/test_set.csv")
 
 
-cur_data = data
 
-tree = Tree(data, headers)
+
+tree = Tree(training_data, headers)
 tree.save("data_sets1/results.model")
+
+total = 0
+correct = 0
+for row in test_data:
+    total += 1
+    if tree.get_class(row) == row["Class"]:
+        correct += 1
+print("Percentage correct is: " + str(correct/total))
+
 
 
 # def recurse(data, headers, level):
