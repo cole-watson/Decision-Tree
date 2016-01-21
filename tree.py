@@ -15,3 +15,6 @@ class Tree:
 		file = open(loc, "wt")
 
 		file.write(self.__str__())
+
+	def get_class(self):
+		

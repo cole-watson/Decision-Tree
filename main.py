@@ -3,16 +3,21 @@
 from data_import import data_reader
 from tree import Tree
 
-data = data_reader("data_sets1/training_set.csv")
-headers = list(data[0].keys())
+training_data = data_reader("data_sets1/training_set.csv")
+headers = list(training_data[0].keys())
+headers.sort()
 headers.remove("Class")
 
+test_data = data_reader("data_sets1/test_set.csv")
 
 
-cur_data = data
 
-tree = Tree(data, headers)
+
+tree = Tree(training_data, headers)
 tree.save("data_sets1/results.model")
+
+for row in test_data:
+
 
 
 # def recurse(data, headers, level):
