@@ -1,6 +1,8 @@
 # Decision-Tree
 
-A project for our Machine Learning course where we create a decision tree based on a set of training data. 
+A project for our Machine Learning course where we create a decision tree based on a set of training data.
+
+By: Frankie Gasparovic & Cole Watson
 
 ###Dependencies:
 Python3
