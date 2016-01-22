@@ -62,7 +62,7 @@ class Node:
 
         :param _data: data set for next node
         :param _headers: potential atrributes to split on
-        :return: a new node in our tree or leaf
+        :return: a new node in our tree or a leaf
         """
 
         zero = 0
