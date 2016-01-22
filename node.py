@@ -95,7 +95,7 @@ class Node:
         chi = self.chi_square(_data, zero_data, one_data)
 
         if chi<6.635:
-            if zero > one:
+            if zero >= one:
                 return 0
             else:
                 return 1
