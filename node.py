@@ -92,8 +92,10 @@ class Node:
             elif row[new_header] == 1:
                 one_data.append(row)
 
-        if self.chi_square(_data, zero_data, one_data)<6.635:
-            if zero >= one:
+        chi = self.chi_square(_data, zero_data, one_data)
+
+        if chi<6.635:
+            if zero > one:
                 return 0
             else:
                 return 1
